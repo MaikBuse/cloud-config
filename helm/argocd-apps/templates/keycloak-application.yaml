@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  sources:
+    - repoURL: "https://charts.bitnami.com/bitnami"
+      targetRevision: "21.0.1"
+      chart: "keycloak"
+      helm:
+        values: |
+          production: true
+          proxy: "edge"
+          postgresql:
+            auth:
+              existingSecret: "postgres-secret"
+          ingress:
+            enabled: true
+            hostname: "keycloak.maikbuse.com"
+            path: "/"
+            ingressClassName: "traefik"
+            tls: true
+            annotations: {
+              cert-manager.io/cluster-issuer: "common-cluster-issuer"
+            }
+          adminIngress:
+            enabled: true
+            hostname: "keycloak-admin.maikbuse.com"
+            path: "/"
+            ingressClassName: "traefik"
+            tls: true
+            annotations: {
+              cert-manager.io/cluster-issuer: "common-cluster-issuer"
+            }
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: keycloak

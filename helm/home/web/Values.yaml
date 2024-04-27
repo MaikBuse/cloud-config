@@ -1,0 +1,3 @@
+web:
+  container:
+    image: "mbuse0/home-web:1e0b0607ee510ba1c7dba66791237a1c424bccc6"

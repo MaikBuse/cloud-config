@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: 'https://pkgs.tailscale.com/helmcharts'
+    chart: tailscale-operator
+    targetRevision: '1.62.1'
+    helm:
+      values: |
+        apiServerProxyConfig:
+          mode: "true"
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: null
+            memory: "192Mi"
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: tailscale

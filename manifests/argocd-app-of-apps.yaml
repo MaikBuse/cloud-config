@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "app-of-apps"
+  namespace: "argocd"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: "default"
+  source:
+    repoURL: "https://github.com/MaikBuse/cloud-config"
+    path: "helm/argocd-apps"
+    targetRevision: "main"
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: "argocd"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
+    syncOptions:
+      - Validate=false
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 0
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

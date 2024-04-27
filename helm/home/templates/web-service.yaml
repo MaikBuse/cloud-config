@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "home-web-service"
+  namespace: "home"
+  labels:
+    app: "home-web-service"
+spec:
+  selector:
+    app: "home-web"
+  ports:
+    - name: "next"
+      protocol: TCP
+      port: 3000
+      targetPort: "next"

@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "web-ingress"
+  namespace: "home"
+  annotations:
+    cert-manager.io/cluster-issuer: "common-cluster-issuer"
+spec:
+  tls:
+    - hosts:
+        - maikbuse.com
+        - www.maikbuse.com
+        - maikbuse.de
+        - www.maikbuse.de
+      secretName: web-ingress-secret
+  rules:
+    - host: maikbuse.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "home-web-service"
+                port:
+                  name: "next"
+    - host: www.maikbuse.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "home-web-service"
+                port:
+                  name: "next"
+    - host: maikbuse.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "home-web-service"
+                port:
+                  name: "next"
+    - host: www.maikbuse.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "home-web-service"
+                port:
+                  name: "next"
