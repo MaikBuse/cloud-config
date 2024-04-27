@@ -129,7 +129,7 @@ Accounts
 
 7. Change the hostname of the kubernetes-tailscale-operator-machine from `tailscale-operator` to `hetzner-kube-api`
 8. You can now change the terraform variable `kube_api_source` to `hetzner-kube-api`
-9. Copy folder `secret-examples` to `secrets` and fill out the values
+9. Copy folder `secret-examples` to `secrets` with `cp -r secret-examples secrets/` and fill out the values 
 10. Execute `seal-secrets.sh` in order to seal the secrets. You might have to add permissions with `chmod +x ./seal-secrets.sh`
 11. Commit and push the sealed secrets
 

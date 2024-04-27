@@ -4,7 +4,7 @@ terraform output --raw kubeconfig >cluster_kubeconfig.yaml
 
 # Define source and destination directories
 SOURCE_DIR="./secrets"
-DEST_DIR="./helm/secrets"
+DEST_DIR="./helm/secrets/templates"
 
 # Loop through all .yaml files in the source directory
 for file in "$SOURCE_DIR"/*.yaml; do
