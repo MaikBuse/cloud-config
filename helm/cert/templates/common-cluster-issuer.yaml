@@ -6,7 +6,7 @@ metadata:
 spec:
  acme:
    email: "contact@maikbuse.com"
-   server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+   server: "https://acme-v02.api.letsencrypt.org/directory"
    privateKeySecretRef:
      name: "tls-privatekey-secret"
    solvers:
