@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres-operator
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  sources:
+    - repoURL: "https://github.com/MaikBuse/crunchydata-pgo-helm-5.5.1"
+      path: "helm/install"
+      targetRevision: "main"
+    - repoURL: "https://github.com/MaikBuse/cloud-config"
+      path: "helm/postgres"
+      targetRevision: "main"
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: "postgres"
+  syncPolicy:
+    syncOptions:
+    - Validate=false
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

@@ -127,11 +127,18 @@ Accounts
    terraform apply --auto-approve
    ```
 
-7. Change the hostname of the kubernetes-tailscale-operator-machine from `tailscale-operator` to `hetzner-kube-api`
-8. You can now change the terraform variable `kube_api_source` to `hetzner-kube-api`
-9. Copy folder `secret-examples` to `secrets` with `cp -r secret-examples secrets/` and fill out the values 
-10. Execute `seal-secrets.sh` in order to seal the secrets. You might have to add permissions with `chmod +x ./seal-secrets.sh`
-11. Commit and push the sealed secrets
+7. Copy folder `secret-examples` to `secrets` with `cp -r secret-examples secrets/` and fill out the values 
+8. Execute `./seal-secrets.sh` in order to seal the secrets. You might have to add permissions with `chmod +x ./seal-secrets.sh`
+9. Commit and push the sealed secrets
+10. Manually sync the tailscale argocd application on the control plane machine:
+
+``` bash
+kubectl patch applications.argoproj.io tailscale-operator --type='json' -p='[{"op": "add", "path": "/spec/operation", "value": {"initiatedBy": {"username": "user"}, "sync": {"syncStrategy": {"hook": {}}}}}]' -n argocd
+```
+
+11. Change the hostname of the kubernetes-tailscale-operator-machine from `tailscale-operator` to `hetzner-kube-api`
+12. You can now change the terraform variable `kube_api_source` to `hetzner-kube-api`
+13. Follow up by manually syncing the postgres argocd application. You might have to apply the sync using the `--server-side` flag in order to workaraound an [issue](https://github.com/CrunchyData/postgres-operator/issues/3633) concerning invalid metadata annotations
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

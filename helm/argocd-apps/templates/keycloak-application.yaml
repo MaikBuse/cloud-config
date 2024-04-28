@@ -18,8 +18,14 @@ spec:
           production: true
           proxy: "edge"
           postgresql:
-            auth:
-              existingSecret: "postgres-secret"
+            enabled: false
+          externalDatabase:
+            existingSecret: "postgres-pguser-keycloak"
+            existingSecretHostKey: "host"
+            existingSecretPortKey: "port"
+            existingSecretUserKey: "user"
+            existingSecretDatabaseKey: "dbname"
+            existingSecretPasswordKey: "password"
           ingress:
             enabled: true
             hostname: "keycloak.maikbuse.com"
@@ -41,3 +47,16 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: keycloak
+  syncPolicy:
+    syncOptions:
+    - Validate=false
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

@@ -27,3 +27,16 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: tailscale
+  syncPolicy:
+    syncOptions:
+      - Validate=false
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 0
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
