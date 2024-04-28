@@ -27,10 +27,19 @@ spec:
       - secret:
           name: pgo-s3-creds-secret
       global:
-        repo-one-path: /pgbackrest/postgres-operator/keycloak/repo1
+        repo1-path: /keycloak
+        repo1-retention-full: "3"
+        repo1-retention-full-type: count
+      manual:
+        repoName: repo1
+        options:
+         - --type=full
       repos:
       - name: repo1
         s3:
           bucket: "kube-hetzner-postgres-backups"
           endpoint: "s3.amazonaws.com"
           region: "eu-central-1"
+        schedules:
+          full: "0 1 * * *"
+          differential: "0 * * * *"

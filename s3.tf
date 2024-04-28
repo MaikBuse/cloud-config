@@ -28,10 +28,15 @@ resource "aws_iam_policy" "s3_access" {
         Action = [
           "s3:GetObject",
           "s3:PutObject",
-          "s3:DeleteObject"
+          "s3:PutObjectTagging",
+          "s3:DeleteObject",
+          "s3:ListBucket"
         ]
-        Effect   = "Allow"
-        Resource = "${module.s3_bucket.s3_bucket_arn}/*"
+        Effect = "Allow"
+        Resource = [
+          "${module.s3_bucket.s3_bucket_arn}/*",
+          "${module.s3_bucket.s3_bucket_arn}"
+        ]
       },
     ]
   })
