@@ -48,7 +48,7 @@ resource "kubernetes_config_map" "argocd-rbac-cm" {
 
   data = {
     "policy.csv" = <<-EOT
-      g, ArgoCDAdmins, role:admin
+      g, Admins, role:admin
     EOT
   }
 

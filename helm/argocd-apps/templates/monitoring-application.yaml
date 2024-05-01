@@ -16,6 +16,31 @@ spec:
     - repoURL: "https://grafana.github.io/helm-charts"
       chart: "grafana"
       targetRevision: "7.3.9"
+      helm:
+        values: |
+          assertNoLeakedSecrets: false
+          envFromSecret: "grafana-keycloak-oauth-secret"
+          grafana.ini:
+            server:
+              domain: grafana.maikbuse.com
+              root_url: https://grafana.maikbuse.com
+            auth.generic_oauth:
+              enabled: true
+              name: Keycloak-OAuth
+              allow_sign_up: true
+              allow_assign_grafana_admin: true
+              client_id: grafana-oauth
+              scopes: openid email profile offline_access grafana-client-roles
+              email_attribute_path: email
+              login_attribute_path: preferred_username
+              name_attribute_path: name
+              auth_url: https://keycloak.maikbuse.com/realms/default/protocol/openid-connect/auth
+              token_url: https://keycloak.maikbuse.com/realms/default/protocol/openid-connect/token
+              api_url: https://keycloak.maikbuse.com/realms/default/protocol/openid-connect/userinfo
+              role_attribute_strict: true
+              role_attribute_path: (contains(roles[*], 'grafanaAdmin') && 'GrafanaAdmin') || (contains(roles[*], 'admin') && 'Admin') || (contains(roles[*], 'editor') && 'Editor') || 'Viewer'
+            users:
+              auto_assign_org_role: Viewer
     - repoURL: 'https://github.com/MaikBuse/cloud-config'
       targetRevision: 'main'
       path: 'helm/monitoring'
