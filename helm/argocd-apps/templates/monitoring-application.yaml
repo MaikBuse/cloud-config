@@ -16,6 +16,9 @@ spec:
     - repoURL: "https://grafana.github.io/helm-charts"
       chart: "grafana"
       targetRevision: "7.3.9"
+    - repoURL: 'https://github.com/MaikBuse/cloud-config'
+      targetRevision: 'main'
+      path: 'helm/monitoring'
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: "monitoring"

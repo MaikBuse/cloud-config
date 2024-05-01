@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "grafana-ingress"
+  namespace: "monitoring"
+  annotations:
+    cert-manager.io/cluster-issuer: "common-prod-cluster-issuer"
+spec:
+  tls:
+    - hosts:
+        - grafana.maikbuse.com
+        - grafana.maikbuse.de
+      secretName: grafana-ingress-secret
+  rules:
+    - host: grafana.maikbuse.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "monitoring-grafana"
+                port:
+                  name: "service"
+    - host: grafana.maikbuse.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "monitoring-grafana"
+                port:
+                  name: "service"
