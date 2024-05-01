@@ -41,5 +41,5 @@ spec:
           endpoint: "s3.amazonaws.com"
           region: "eu-central-1"
         schedules:
-          full: "0 0 * * *"
+          full: "0 0 * * 1"
           differential: "0 1-23 * * *"
