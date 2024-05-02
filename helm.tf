@@ -16,6 +16,7 @@ resource "kubernetes_config_map" "argocd-cm" {
 
   data = {
     "url" : "https://argocd.maikbuse.com"
+    "admin.enabled" : "false"
     "oidc.config"         = <<-EOT
       name: Keycloak
       issuer: https://keycloak.maikbuse.com/realms/default
