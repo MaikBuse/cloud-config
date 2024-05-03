@@ -34,10 +34,10 @@ spec:
               email_attribute_path: email
               login_attribute_path: preferred_username
               name_attribute_path: name
-              auth_url: https://keycloak.maikbuse.com/realms/default/protocol/openid-connect/auth
-              token_url: https://keycloak.maikbuse.com/realms/default/protocol/openid-connect/token
-              api_url: https://keycloak.maikbuse.com/realms/default/protocol/openid-connect/userinfo
-              signout_redirect_url: https://keycloak.maikbuse.com/realms/default/protocol/openid-connect/logout
+              auth_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/auth
+              token_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/token
+              api_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/userinfo
+              signout_redirect_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/logout
               role_attribute_strict: true
               role_attribute_path: (contains(roles[*], 'grafanaAdmin') && 'GrafanaAdmin') || (contains(roles[*], 'admin') && 'Admin') || (contains(roles[*], 'editor') && 'Editor') || 'Viewer'
             users:

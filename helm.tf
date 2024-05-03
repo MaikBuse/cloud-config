@@ -19,7 +19,7 @@ resource "kubernetes_config_map" "argocd-cm" {
     "admin.enabled" : "false"
     "oidc.config"         = <<-EOT
       name: Keycloak
-      issuer: https://keycloak.maikbuse.com/realms/default
+      issuer: https://keycloak.maikbuse.com/realms/home
       clientID: argocd
       clientSecret: $oidc.keycloak.clientSecret
       requestedScopes: ["openid", "profile", "email", "groups"]
