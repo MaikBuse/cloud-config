@@ -26,25 +26,6 @@ spec:
             existingSecretUserKey: "user"
             existingSecretDatabaseKey: "dbname"
             existingSecretPasswordKey: "password"
-          initContainers: |
-            - name: realm-ext-provider
-              image: curlimages/curl
-              imagePullPolicy: IfNotPresent
-              command:
-                - sh
-              args:
-                - -c
-                - |
-                  curl -L -f -S -o /extensions/home-keycloak-theme.jar https://github.com/MaikBuse/home-keycloak-theme/releases/download/1.0.0/home-keycloak-theme-1.0.0.jar
-              volumeMounts:
-                - name: extensions
-                  mountPath: /extensions
-          extraVolumeMounts: |
-            - name: extensions
-              mountPath: /opt/bitnami/keycloak/providers
-          extraVolumes: |
-            - name: extensions
-              emptyDir: {}
           ingress:
             enabled: true
             hostname: "keycloak.maikbuse.com"
