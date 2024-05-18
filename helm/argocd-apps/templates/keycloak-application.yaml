@@ -33,8 +33,18 @@ spec:
             ingressClassName: "traefik"
             tls: true
             annotations: {
-              cert-manager.io/cluster-issuer: "common-cluster-issuer"
+              cert-manager.io/cluster-issuer: "common-prod-cluster-issuer"
             }
+            extraHosts:
+              - name: "keycloak.vectory.app"
+                path: "/"
+              - name: "keycloak.vectory.dev"
+                path: "/"
+            extraTls:
+              - hosts:
+                  - keycloak.vectory.app
+                  - keycloak.vectory.dev
+                secretName: keycloak.vectory-tls
           adminIngress:
             enabled: true
             hostname: "keycloak-admin.maikbuse.com"
@@ -42,8 +52,18 @@ spec:
             ingressClassName: "traefik"
             tls: true
             annotations: {
-              cert-manager.io/cluster-issuer: "common-cluster-issuer"
+              cert-manager.io/cluster-issuer: "common-prod-cluster-issuer"
             }
+            extraHosts:
+              - name: "keycloak-admin.vectory.app"
+                path: "/"
+              - name: "keycloak-admin.vectory.dev"
+                path: "/"
+            extraTls:
+              - hosts:
+                  - keycloak-admin.vectory.app
+                  - keycloak-admin.vectory.dev
+                secretName: keycloak-admin.vectory-tls
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: keycloak
