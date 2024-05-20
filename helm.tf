@@ -15,6 +15,15 @@ resource "kubernetes_config_map" "argocd-cm" {
   }
 
   data = {
+    "url" : "https://argocd.maikbuse.com"
+    "admin.enabled" : "false"
+    "oidc.config"         = <<-EOT
+      name: Keycloak
+      issuer: https://keycloak.maikbuse.com/realms/home
+      clientID: argocd
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
+    EOT
     "resource.exclusions" = <<-EOT
     - apiGroups:
         - cilium.io
@@ -22,6 +31,25 @@ resource "kubernetes_config_map" "argocd-cm" {
         - CiliumIdentity
       clusters:
         - "*"
+    EOT
+  }
+
+  depends_on = [kubernetes_namespace.argocd]
+}
+
+resource "kubernetes_config_map" "argocd-rbac-cm" {
+  metadata {
+    name      = "argocd-rbac-cm"
+    namespace = "argocd"
+    labels = {
+      "app.kubernetes.io/name"    = "argocd-rbac-cm"
+      "app.kubernetes.io/part-of" = "argocd"
+    }
+  }
+
+  data = {
+    "policy.csv" = <<-EOT
+      g, Admins, role:admin
     EOT
   }
 
@@ -44,9 +72,21 @@ resource "helm_release" "argocd" {
     value = false
   }
 
+  set {
+    name  = "configs.rbac.create"
+    value = false
+  }
+
+  # Needed in order to make ingress work
+  set {
+    name  = "configs.params.server.insecure"
+    value = true
+  }
+
   depends_on = [
     kubernetes_namespace.argocd,
-    kubernetes_config_map.argocd-cm
+    kubernetes_config_map.argocd-cm,
+    kubernetes_config_map.argocd-rbac-cm
   ]
 }
 

@@ -59,6 +59,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#troubeshooting">Troubeshooting</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -130,15 +131,19 @@ Accounts
 7. Copy folder `secret-examples` to `secrets` with `cp -r secret-examples secrets/` and fill out the values 
 8. Execute `./seal-secrets.sh` in order to seal the secrets. You might have to add permissions with `chmod +x ./seal-secrets.sh`
 9. Commit and push the sealed secrets
-10. Manually sync the tailscale argocd application on the control plane machine:
+10. Manually sync the tailscale application on the control plane machine:
 
 ``` bash
 kubectl patch applications.argoproj.io tailscale-operator --type='json' -p='[{"op": "add", "path": "/spec/operation", "value": {"initiatedBy": {"username": "user"}, "sync": {"syncStrategy": {"hook": {}}}}}]' -n argocd
 ```
 
-11. Change the hostname of the kubernetes-tailscale-operator-machine from `tailscale-operator` to `hetzner-kube-api`
-12. You can now change the terraform variable `kube_api_source` to `hetzner-kube-api`
-13. Follow up by manually syncing the postgres argocd application. You might have to apply the sync using the `--server-side` flag in order to workaraound an [issue](https://github.com/CrunchyData/postgres-operator/issues/3633) concerning invalid metadata annotations
+11. Change the hostname of the kubernetes-tailscale-operator-machine from `tailscale-operator` to `hetzner-kube-api` and run `tailscale configure kubeconfig hetzner-kube-api` so that you can use tooling from your local machine to manage the k8s cluster
+12. Use port forwarding to access the argocd web-ui and proceed to sync all applications with regard to their sync wave order
+12. Follow this [guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/keycloak/) to setup keycloak auth with argocd and patch the argocd-secret with the just created api-key:
+
+``` sh
+kubectl patch secret argocd-secret -n argocd -p '{"data":{"oidc.keycloak.clientSecret":"BASE64-ENCODED-API-KEY"}}' --type=merge
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -146,6 +151,11 @@ kubectl patch applications.argoproj.io tailscale-operator --type='json' -p='[{"o
 ## Usage
 
 Here are a few commands that should definitely come in handy when working with the setup.
+
+- Encode a string to base64
+``` sh
+echo -n '83083958-8ec6-47b0-a411-a8c55381fbd2' | base64
+```
 
 - Use SSH to login to a control plane node
 
@@ -193,6 +203,18 @@ Take the key under `Authentication key` and use it in following function
 ``` bash
 gpg --export-ssh-key [KeyID] > key.pub
 ```
+<!-- TROUBESHOOTING -->
+## Troubeshooting
+
+- `terraform plan` runs into timeouts when trying to connect via ssh
+
+Make sure to set the tf variable `source_addresses` to your public ip-address and manually set your public ip-address in the hetzner-cloud `k3s` firewall under `Allow Incoming SSH Traffic` and `Allow Incoming Requests to Kube API Server`
+
+- Synchronization of the argocd postgres application fails
+
+Apply the sync using the `--server-side` flag in order to workaraound an [issue](https://github.com/CrunchyData/postgres-operator/issues/3633) concerning invalid metadata annotations.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License

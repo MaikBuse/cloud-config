@@ -1,0 +1,69 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  sources:
+    - repoURL: "https://prometheus-community.github.io/helm-charts"
+      chart: "prometheus"
+      targetRevision: "25.20.1"
+    - repoURL: "https://grafana.github.io/helm-charts"
+      chart: "grafana"
+      targetRevision: "7.3.9"
+      helm:
+        values: |
+          assertNoLeakedSecrets: false
+          envFromSecret: "grafana-keycloak-oauth-secret"
+          grafana.ini:
+            server:
+              domain: grafana.maikbuse.com
+              root_url: https://grafana.maikbuse.com
+            auth.generic_oauth:
+              enabled: true
+              name: Keycloak-OAuth
+              allow_sign_up: true
+              allow_assign_grafana_admin: true
+              client_id: grafana-oauth
+              scopes: openid email profile offline_access grafana-client-roles
+              email_attribute_path: email
+              login_attribute_path: preferred_username
+              name_attribute_path: name
+              auth_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/auth
+              token_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/token
+              api_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/userinfo
+              signout_redirect_url: https://keycloak.maikbuse.com/realms/home/protocol/openid-connect/logout
+              role_attribute_strict: true
+              role_attribute_path: (contains(roles[*], 'grafanaAdmin') && 'GrafanaAdmin') || (contains(roles[*], 'admin') && 'Admin') || (contains(roles[*], 'editor') && 'Editor') || 'Viewer'
+            users:
+              auto_assign_org_role: Viewer
+            auth:
+              disable_login_form: true
+              oauth_auto_login: true
+            security:
+              disable_initial_admin_creation: true
+              allow_embedding: true
+    - repoURL: 'https://github.com/MaikBuse/cloud-config'
+      targetRevision: 'main'
+      path: 'helm/monitoring'
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: "monitoring"
+  syncPolicy:
+    syncOptions:
+    - Validate=false
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

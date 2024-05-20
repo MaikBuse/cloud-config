@@ -2,12 +2,12 @@ apiVersion: postgres-operator.crunchydata.com/v1beta1
 kind: PostgresCluster
 metadata:
   name: postgres
-  namespace: keycloak
+  namespace: vectory
 spec:
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:ubi8-16.2-0
   postgresVersion: 16
   instances:
-    - name: keycloak
+    - name: vectory
       replicas: 1
       dataVolumeClaimSpec:
         accessModes:
@@ -16,10 +16,10 @@ spec:
           requests:
             storage: 1Gi
   users:
-    - name: "keycloak"
+    - name: "vectory"
       options: 'SUPERUSER'
       databases:
-        - keycloak
+        - vectory
   backups:
     pgbackrest:
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:ubi8-2.49-0
@@ -27,7 +27,7 @@ spec:
       - secret:
           name: pgo-s3-creds-secret
       global:
-        repo1-path: /keycloak
+        repo1-path: /vectory
         repo1-retention-full: "3"
         repo1-retention-full-type: count
       manual:
