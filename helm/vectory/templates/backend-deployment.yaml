@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "vectory-backend"
+  namespace: "vectory"
+  labels:
+    app: "vectory-backend"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "vectory-backend"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: "vectory-backend"
+    spec:
+      imagePullSecrets:
+        - name: "image-pull-secret"
+      containers:
+        - name: "vectory-backend"
+          image: {{ .Values.backend.container.image | quote }}
+          ports:
+            - name: "go"
+              containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: "/health"
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            timeoutSeconds: 5
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "475m"
+            limits:
+              memory: "1024Mi"
