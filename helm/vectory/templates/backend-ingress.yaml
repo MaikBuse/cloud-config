@@ -11,7 +11,7 @@ spec:
         - api.vectory.dev
       secretName: backend-ingress-secret
   rules:
-    - host: api.vectory.app
+    - host: api.vectory.dev
       http:
         paths:
           - path: /
