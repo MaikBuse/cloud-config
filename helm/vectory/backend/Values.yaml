@@ -1,0 +1,3 @@
+web:
+  container:
+    image: "mbuse0/vectory-backend:7dfef21da618f0d655679e80e427cf4a5447741b"
