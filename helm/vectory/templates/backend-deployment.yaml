@@ -53,7 +53,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres-pguser-vectory
-                  key: dbName
+                  key: dbname
           ports:
             - name: "go"
               containerPort: 3000
