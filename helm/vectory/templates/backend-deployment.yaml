@@ -27,7 +27,7 @@ spec:
           image: {{ .Values.backend.container.image | quote }}
           envFrom:
             - secretRef:
-              name: "vectory-backend-keycloak-secret"
+                name: "vectory-backend-keycloak-secret"
           env:
             - name: DB_HOST
               valueFrom:
