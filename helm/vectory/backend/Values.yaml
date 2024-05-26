@@ -1,3 +1,3 @@
 backend:
   container:
-    image: "mbuse0/vectory-backend:fe4ee3c6dc0ae333db055408fa7600708351e710"
+    image: "mbuse0/vectory-backend:d585d32151db5f593c98459442c2b9d4d8768f66"
