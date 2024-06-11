@@ -16,6 +16,7 @@ spec:
     helm:
       valueFiles:
       - backend/Values.yaml
+      - migration/Values.yaml
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: vectory
