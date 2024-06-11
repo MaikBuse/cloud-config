@@ -22,6 +22,38 @@ spec:
     spec:
       imagePullSecrets:
         - name: "image-pull-secret"
+      initContainers:
+        - name: "vectory-migration"
+          image: {{ .Values.migration.container.image | quote }}
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pguser-vectory
+                  key: host
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pguser-vectory
+                  key: port
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pguser-vectory
+                  key: user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pguser-vectory
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-pguser-vectory
+                  key: dbname
+            - name: GOOSE_DBSTRING
+              value: >
+                "host=$(DB_HOST) port=$(DB_PORT) user=$(DB_USER) password=$(DB_PASSWORD) dbname=$(DB_NAME) sslmode=prefer"
       containers:
         - name: "vectory-backend"
           image: {{ .Values.backend.container.image | quote }}
