@@ -51,9 +51,6 @@ spec:
                 secretKeyRef:
                   name: postgres-pguser-vectory
                   key: dbname
-            - name: GOOSE_DBSTRING
-              value: >
-                "host=$(DB_HOST) port=$(DB_PORT) user=$(DB_USER) password=$(DB_PASSWORD) dbname=$(DB_NAME) sslmode=prefer"
       containers:
         - name: "vectory-backend"
           image: {{ .Values.backend.container.image | quote }}
