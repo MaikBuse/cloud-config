@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - api.vectory.dev
+        - api.vectory.app
       secretName: backend-ingress-secret
   rules:
-    - host: api.vectory.dev
+    - host: api.vectory.app
       http:
         paths:
           - path: /
