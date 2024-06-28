@@ -111,6 +111,18 @@ spec:
     - repoURL: 'https://github.com/MaikBuse/cloud-config'
       targetRevision: 'main'
       path: 'helm/monitoring'
+    - repoURL: 'https://kubernetes-charts.banzaicloud.com'
+      chart: 'logging-operator'
+      targetRevision: '3.17.10'
+      helm:
+        values: |
+          ressources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: "monitoring"
