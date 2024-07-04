@@ -1,3 +1,3 @@
 migration:
   container:
-    image: "mbuse0/vectory-migration:89bb2fc2859601d3ee486bc8c9b441a03421fac4"
+    image: "mbuse0/vectory-migration:6482e8a1f75c168c1085735e3babc5f5a692becf"
