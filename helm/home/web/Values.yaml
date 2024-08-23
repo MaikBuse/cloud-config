@@ -1,3 +1,3 @@
 web:
   container:
-    image: "mbuse0/home-web:134a22cb21dd1d9b6c22290a6402fcff4c558f25"
+    image: "mbuse0/home-web:43d9d4155c259ec64df31d6c0d8d677cfbf01b37"
